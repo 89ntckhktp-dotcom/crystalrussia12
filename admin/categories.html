@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Категории | Админка CRYSTAL RUSSIA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+         ..admin-header {
+            text-align: center;
+            margin-bottom: 50px; /* Увеличен отступ снизу, чтобы текст не сливался с блоками */
+        }
+
+        .admin-header p {
+            margin-top: 10px;
+            color: #FFB347;
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        .admin-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #FF8C00, #FFA500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .admin-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #FF8C00;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .add-category-btn {
+            background: linear-gradient(135deg, #FF8C00, #FFA500);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .add-category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(191, 85, 0, 0.5);
+        }
+        
+        .add-category-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 10px rgba(106, 17, 203, 0.4);
+        }
+        
+        .categories-list {
+            background: rgba(31, 21, 0, 0.8);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+        
+        .category-header {
+            display: grid;
+            grid-template-columns: 40px 200px 1fr 150px 100px;
+            padding: 20px;
+            background: rgba(106, 17, 203, 0.2);
+            border-bottom: 1px solid rgba(255, 140, 0, 0.3);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .category-item {
+            display: grid;
+            grid-template-columns: 40px 200px 1fr 150px 100px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 140, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .category-item:hover {
+            background: rgba(106, 17, 203, 0.1);
+        }
+        
+        .category-item:last-child {
+            border-bottom: none;
+        }
+        
+        .category-id {
+            color: #FFB347;
+            font-weight: 600;
+        }
+        
+        .category-name {
+            font-weight: 600;
+            color: white;
+        }
+        
+        .category-description {
+            color: #FFB347;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .category-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .status-active {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .status-inactive {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+        
+        .category-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .edit-btn {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+        
+        .edit-btn:hover {
+            background: rgba(33, 150, 243, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .delete-btn {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+        
+        .delete-btn:hover {
+            background: rgba(244, 67, 54, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: rgba(15, 15, 35, 0.98);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(106, 17, 203, 0.3);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .modal-title {
+            margin-bottom: 30px;
+            text-align: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #FF8C00;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='white' d='M8 10l-4-4 1.5-1.5L8 8l2.5-2.5L12 7z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: #FF8C00;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .save-btn, .cancel-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #FF8C00, #FFA500);
+            color: white;
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(191, 85, 0, 0.5);
+        }
+        
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .confirm-modal .modal-content {
+            max-width: 400px;
+        }
+        
+        .confirm-text {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .confirm-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .confirm-btn, .cancel-confirm-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(135deg, #F44336, #D32F2F);
+            color: white;
+        }
+        
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5);
+        }
+        
+        .cancel-confirm-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cancel-confirm-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Шапка -->
+    <header>
+        <div class="header-container">
+            <a href="../index.html" class="logo">
+                <div class="logo-img">
+                    <img src="../images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </a>
+            
+            <!-- Десктопное меню -->
+            <nav class="desktop-nav">
+                <a href="../index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="../start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+                <a href="../faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                <a href="../contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="../forum.html"><i class="fas fa-comments"></i> Форум</a>
+            </nav>
+            
+            <div class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="menu-header">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="../images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </div>
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="../index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="../start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+            <a href="../faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+            <a href="../contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+            <a href="../forum.html"><i class="fas fa-comments"></i> Форум</a>
+        </nav>
+        
+        <div class="social-links">
+            <a href="https://vk.com/crystal_russia" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="https://t.me/crystal_russian" target="_blank"><i class="fab fa-telegram"></i></a>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="admin-container">
+        <div class="admin-header" style="margin-top: 80px; text-align: center; padding: 20px;">
+            <h1>Панель управления</h1>
+            <p>Добро пожаловать в административную панель CRYSTAL RUSSIA</p>
+        </div>
+
+        <!-- Управление -->
+        <div class="admin-controls">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Поиск категорий..." id="searchInput">
+            </div>
+        </div>
+
+        <div class="categories-management">
+            <h2><i class="fas fa-th-large"></i> Управление категориями</h2>
+            <p>Создание, редактирование и удаление категорий для проекта</p>
+            <button class="add-category-btn" id="addCategoryBtn">
+                <i class="fas fa-plus"></i> Добавить категорию
+            </button>
+        </div>
+
+        <!-- Список категорий -->
+        <div class="categories-list">
+            <div class="category-header">
+                <div>ID</div>
+                <div>Название</div>
+                <div>Описание</div>
+                <div>Статус</div>
+                <div>Действия</div>
+            </div>
+            <div class="category-item" data-id="1">
+                <div class="category-id">1</div>
+                <div class="category-name">Начальные работы</div>
+                <div class="category-description">Первые задачи для новых игроков, которые помогут начать игровой процесс и получить первые награды.</div>
+                <div class="category-status status-active">Активна</div>
+                <div class="category-actions">
+                    <button class="action-btn edit-btn" data-id="1"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn" data-id="1"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="category-item" data-id="2">
+                <div class="category-id">2</div>
+                <div class="category-name">Строительство</div>
+                <div class="category-description">Задачи, связанные со строительством зданий, улучшением инфраструктуры и развитием территории.</div>
+                <div class="category-status status-active">Активна</div>
+                <div class="category-actions">
+                    <button class="action-btn edit-btn" data-id="2"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn" data-id="2"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="category-item" data-id="3">
+                <div class="category-id">3</div>
+                <div class="category-name">Экономика</div>
+                <div class="category-description">Финансовые задачи, управление ресурсами, инвестирование и торговля.</div>
+                <div class="category-status status-active">Активна</div>
+                <div class="category-actions">
+                    <button class="action-btn edit-btn" data-id="3"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn" data-id="3"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="category-item" data-id="4">
+                <div class="category-id">4</div>
+                <div class="category-name">Социальные задания</div>
+                <div class="category-description">Задачи, связанные с взаимодействием с другими игроками, участие в сообществе и помощь новичкам.</div>
+                <div class="category-status status-active">Активна</div>
+                <div class="category-actions">
+                    <button class="action-btn edit-btn" data-id="4"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn" data-id="4"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="category-item" data-id="5">
+                <div class="category-id">5</div>
+                <div class="category-name">События</div>
+                <div class="category-description">Сезонные ивенты, праздничные задания и специальные мероприятия.</div>
+                <div class="category-status status-inactive">Неактивна</div>
+                <div class="category-actions">
+                    <button class="action-btn edit-btn" data-id="5"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn" data-id="5"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно добавления/редактирования -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal"><i class="fas fa-times"></i></button>
+            <h2 class="modal-title" id="modalTitle">Добавить категорию</h2>
+            
+            <form id="categoryForm">
+                <input type="hidden" id="categoryId">
+                
+                <div class="form-group">
+                    <label for="categoryName" class="form-label">Название категории</label>
+                    <input type="text" id="categoryName" class="form-input" placeholder="Введите название категории" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoryDescription" class="form-label">Описание категории</label>
+                    <textarea id="categoryDescription" class="form-textarea" placeholder="Введите описание категории" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoryStatus" class="form-label">Статус</label>
+                    <select id="categoryStatus" class="form-select" required>
+                        <option value="active">Активна</option>
+                        <option value="inactive">Неактивна</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" id="cancelBtn">Отмена</button>
+                    <button type="submit" class="save-btn">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div class="modal confirm-modal" id="confirmModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeConfirmModal"><i class="fas fa-times"></i></button>
+            <h2 class="modal-title">Подтверждение удаления</h2>
+            
+            <p class="confirm-text">Вы уверены, что хотите удалить эту категорию? Это действие нельзя отменить.</p>
+            
+            <div class="confirm-actions">
+                <button class="cancel-confirm-btn" id="cancelConfirmBtn">Отмена</button>
+                <button class="confirm-btn" id="confirmDeleteBtn">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo" style="justify-content: center; margin-bottom: 20px;">
+                    <div class="logo-img">
+                        <img src="../images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                    </div>
+                    <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+                </div>
+                <p style="color: var(--gray); max-width: 500px; margin: 0 auto;">Масштабный мобильный онлайн-проект, симулятор жизни в детально проработанном мире</p>
+            </div>
+            
+            <div class="footer-links">
+                <a href="../index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="../start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+                <a href="../faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                <a href="../contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="../forum.html"><i class="fas fa-comments"></i> Форум</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2026 CRYSTAL RUSSIA. Все права защищены.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">Версия панели: 1.2.3</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+    <script>
+        // Проверка доступа к админке
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     if (!localStorage.getItem('adminAccessGranted')) {
+        //         alert('Доступ к админке запрещен. Пожалуйста, используйте консоль для получения доступа.');
+        //         window.location.href = '../index.html';
+        //     }
+
+        //     // Инициализация элементов управления
+        //     initializeAdminElements();
+        // });
+        
+        // Загрузка элементов без проверки доступа
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdminElements();
+        });
+
+        // Функция инициализации элементов управления
+        function initializeAdminElements() {
+            // Загрузка категорий с сервера
+            async function loadCategories() {
+                try {
+                    const response = await fetch('/api/categories');
+                    if (!response.ok) {
+                        throw new Error(`Ошибка загрузки: ${response.status}`);
+                    }
+                    const categories = await response.json();
+                    
+                    // Очищаем текущий список (оставляем только заголовок)
+                    const categoriesList = document.querySelector('.categories-list');
+                    const header = categoriesList.querySelector('.category-header');
+                    categoriesList.innerHTML = '';
+                    categoriesList.appendChild(header);
+                    
+                    // Добавляем категории
+                    categories.forEach(category => {
+                        const categoryItem = document.createElement('div');
+                        categoryItem.className = 'category-item';
+                        categoryItem.setAttribute('data-id', category.id);
+                        
+                        categoryItem.innerHTML = `
+                            <div class="category-id">${category.id}</div>
+                            <div class="category-name">${category.name}</div>
+                            <div class="category-description">${category.description}</div>
+                            <div class="category-status ${category.status === 'active' ? 'status-active' : 'status-inactive'}">${category.status === 'active' ? 'Активна' : 'Неактивна'}</div>
+                            <div class="category-actions">
+                                <button class="action-btn edit-btn" data-id="${category.id}"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn delete-btn" data-id="${category.id}"><i class="fas fa-trash"></i></button>
+                            </div>
+                        `;
+                        categoriesList.appendChild(categoryItem);
+                    });
+                    
+                    // Обновляем обработчики
+                    setupEditButtons();
+                    setupDeleteButtons();
+                } catch (error) {
+                    console.error('Ошибка загрузки категорий:', error);
+                    alert('Ошибка загрузки категорий. Проверьте, запущен ли сервер!');
+                }
+            }
+            
+            // Добавление новой категории
+            async function addCategory(categoryData) {
+                try {
+                    const response = await fetch('/api/categories', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(categoryData)
+                    });
+                    
+                    if (response.ok) {
+                        return await response.json();
+                    } else {
+                        throw new Error(`Ошибка добавления: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Ошибка добавления категории:', error);
+                    alert('Ошибка добавления категории. Проверьте данные и состояние сервера!');
+                    return null;
+                }
+            }
+            
+            // Обновление категории
+            async function updateCategory(id, categoryData) {
+                try {
+                    const response = await fetch(`/api/categories/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(categoryData)
+                    });
+                    
+                    if (response.ok) {
+                        return await response.json();
+                    } else {
+                        throw new Error(`Ошибка обновления: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Ошибка обновления категории:', error);
+                    alert('Ошибка обновления категории. Проверьте данные и состояние сервера!');
+                    return null;
+                }
+            }
+            
+            // Удаление категории
+            async function deleteCategory(id) {
+                try {
+                    const response = await fetch(`/api/categories/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        loadCategories(); // Обновляем список после удаления
+                        return result;
+                    } else {
+                        throw new Error(`Ошибка удаления: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Ошибка удаления категории:', error);
+                    alert('Ошибка удаления категории. Проверьте состояние сервера!');
+                    return null;
+                }
+            }
+            
+            // Показ уведомления
+            function showNotification(message) {
+                alert(message);
+            }
+            // Модальные окна
+            const categoryModal = document.getElementById('categoryModal');
+            const confirmModal = document.getElementById('confirmModal');
+            const addCategoryBtn = document.getElementById('addCategoryBtn');
+            const closeModal = document.getElementById('closeModal');
+            const closeConfirmModal = document.getElementById('closeConfirmModal');
+            const categoryForm = document.getElementById('categoryForm');
+            const modalTitle = document.getElementById('modalTitle');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+            const searchInput = document.getElementById('searchInput');
+
+            if (!categoryModal || !confirmModal || !addCategoryBtn || !closeModal ||
+                !closeConfirmModal || !categoryForm || !modalTitle || !confirmDeleteBtn ||
+                !cancelConfirmBtn || !searchInput) {
+                console.error('Не все элементы управления найдены');
+                return;
+            }
+
+            let categoryIdToDelete = null;
+
+            // Открытие модального окна добавления
+            addCategoryBtn.addEventListener('click', function() {
+                modalTitle.textContent = 'Добавить категорию';
+                categoryForm.reset();
+                document.getElementById('categoryId').value = '';
+                categoryModal.style.display = 'flex';
+            });
+
+            // Закрытие модального окна добавления
+            closeModal.addEventListener('click', function() {
+                categoryModal.style.display = 'none';
+            });
+
+            // Закрытие модального окна подтверждения
+            closeConfirmModal.addEventListener('click', function() {
+                confirmModal.style.display = 'none';
+                categoryIdToDelete = null;
+            });
+
+            // Подтверждение удаления
+            confirmDeleteBtn.addEventListener('click', async function() {
+                if (categoryIdToDelete) {
+                    const result = await deleteCategory(categoryIdToDelete);
+                    if (result) {
+                        showNotification('Категория успешно удалена!');
+                        // Перезагружаем категории с сервера
+                        loadCategories();
+                    }
+                    
+                    confirmModal.style.display = 'none';
+                    categoryIdToDelete = null;
+                }
+            });
+
+            // Отмена подтверждения удаления
+            cancelConfirmBtn.addEventListener('click', function() {
+                confirmModal.style.display = 'none';
+                categoryIdToDelete = null;
+            });
+
+            // Закрытие модальных окон по клику вне контента
+            window.addEventListener('click', function(event) {
+                if (event.target === categoryModal) {
+                    categoryModal.style.display = 'none';
+                }
+                if (event.target === confirmModal) {
+                    confirmModal.style.display = 'none';
+                    categoryIdToDelete = null;
+                }
+            });
+
+            // Поиск категорий
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+
+                document.querySelectorAll('.category-item').forEach(item => {
+                    const name = item.querySelector('.category-name').textContent.toLowerCase();
+                    const description = item.querySelector('.category-description').textContent.toLowerCase();
+
+                    if (name.includes(searchTerm) || description.includes(searchTerm)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+
+            // Функция для настройки кнопок редактирования
+            function setupEditButtons() {
+                const editButtons = document.querySelectorAll('.edit-btn');
+                editButtons.forEach(button => {
+                    const newButton = button.cloneNode(true);
+                    button.parentNode.replaceChild(newButton, button);
+                });
+
+                document.querySelectorAll('.edit-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const row = this.closest('.category-item');
+
+                        modalTitle.textContent = 'Редактировать категорию';
+                        document.getElementById('categoryId').value = id;
+                        document.getElementById('categoryName').value = row.querySelector('.category-name').textContent;
+                        document.getElementById('categoryDescription').value = row.querySelector('.category-description').textContent;
+                        document.getElementById('categoryStatus').value = row.querySelector('.category-status').classList.contains('status-active') ? 'active' : 'inactive';
+
+                        categoryModal.style.display = 'flex';
+                    });
+                });
+            }
+
+            // Функция для настройки кнопок удаления
+            function setupDeleteButtons() {
+                const deleteButtons = document.querySelectorAll('.delete-btn');
+                deleteButtons.forEach(button => {
+                    const newButton = button.cloneNode(true);
+                    button.parentNode.replaceChild(newButton, button);
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        categoryIdToDelete = this.getAttribute('data-id');
+                        confirmModal.style.display = 'flex';
+                    });
+                });
+            }
+
+            // Инициализация кнопок редактирования и удаления
+            setupEditButtons();
+            setupDeleteButtons();
+
+            // Генерация уникального ID — ВЫНЕСЕНА НАВЕРХ
+            function generateId() {
+                return Date.now();
+            }
+
+            // Обработка формы добавления/редактирования
+            categoryForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const id = document.getElementById('categoryId').value;
+                const name = document.getElementById('categoryName').value;
+                const description = document.getElementById('categoryDescription').value;
+                const status = document.getElementById('categoryStatus').value;
+
+                const categoryData = {
+                    name,
+                    description,
+                    status
+                };
+
+                let result;
+                if (id) {
+                    // Редактирование
+                    result = await updateCategory(id, categoryData);
+                    if (result) {
+                        showNotification('Категория успешно обновлена!');
+                    }
+                } else {
+                    // Добавление
+                    result = await addCategory(categoryData);
+                    if (result) {
+                        showNotification('Категория успешно добавлена!');
+                    }
+                }
+
+                if (result) {
+                    // Перезагружаем категории с сервера
+                    loadCategories();
+                    
+                    // Закрываем модалку
+                    categoryModal.style.display = 'none';
+                    
+                    // Сбрасываем форму
+                    categoryForm.reset();
+                }
+            });
+            // Загрузка категорий при инициализации
+            loadCategories(); // Загружаем категории с сервера при загрузке страницы
+        } // end of initializeAdminElements
+
+        // Загрузка элементов без проверки доступа
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAdminElements();
+        });
+    </script>
