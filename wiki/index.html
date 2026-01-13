@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki | CRYSTAL RUSSIA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="wiki.css">
+    <script src="../wiki.js"></script>
+    <style>
+        /* Переопределение цветов для соответствия стилю сайта */
+        :root {
+            --wiki-accent: #FFD700; /* Золотой цвет вместо бирюзового */
+            --wiki-accent-alt: #FFA500; /* Оранжево-желтый для подзаголовков */
+            --wiki-accent-soft: #FFEC8B; /* Светло-желтый для акцентов */
+            --wiki-text: #FFFACD; /* Лимонно-белый для основного текста */
+            --wiki-text-secondary: #F0E68C; /* Хаки для вторичного текста */
+            --wiki-border: rgba(255, 215, 0, 0.3); /* Золотая граница с прозрачностью */
+            --wiki-node-line: rgba(255, 165, 0, 0.2); /* Оранжевые линии навигации */
+            --wiki-node-line-active: rgba(255, 215, 0, 0.5); /* Активные линии */
+            --wiki-hover-bg: rgba(255, 215, 0, 0.1); /* Фон при наведении */
+            --wiki-active-outline: 0 0 12px rgba(255, 215, 0, 0.4); /* Свечение при активации */
+            --grid-pattern: radial-gradient(circle, rgba(255, 215, 0, 0.1) 1px, transparent 1px); /* Желтая сетка */
+        }
+        
+        /* Обновленные стили заголовков и текста */
+        .wiki-header h1 {
+            background: linear-gradient(135deg, #FF4500 0%, #FFD700 50%, #FF4500 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .tree-node:hover {
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 25px rgba(255, 215, 0, 0.2);
+            border-color: #FFD700;
+        }
+        
+        .tree-node.active {
+            background: rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+            border-left: 3px solid #FFD700;
+        }
+        
+        .tree-toggle {
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+        }
+        
+        .tree-node.active .tree-toggle {
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        .shimmer-effect::after {
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+        }
+        
+        .wiki-nav a {
+            color: #FFD700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(255, 215, 0, 0.05);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        .wiki-nav a:hover {
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 25px rgba(255, 215, 0, 0.2);
+            border-color: #FFD700;
+        }
+        
+        .wiki-nav a::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+        }
+        
+        body::before {
+            background: 
+                radial-gradient(circle, rgba(255, 215, 0, 0.1) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255, 215, 0, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, calc(50px / 2) calc(50px / 2);
+            animation: gridShift 40s linear infinite;
+        }
+        
+        @keyframes gridShift {
+            0% { background-position: 0 0, calc(50px / 2) calc(50px / 2); }
+            100% { background-position: 100px 100px, calc(50px / 2 + 100px) calc(50px / 2 + 100px); }
+        }
+        /* Базовые цвета и стили для Wiki */
+        :root {
+            --wiki-bg: #0a0a1a;
+            --wiki-panel-bg: #0f0f20;
+            --wiki-accent: #00e5e5;
+            --wiki-accent-alt: #7b68ee;
+            --wiki-accent-soft: #a0f0ff;
+            --wiki-text: #e0f0ff;
+            --wiki-text-secondary: #a0d0f0;
+            --wiki-border: rgba(0, 229, 229, 0.3);
+            --wiki-node-line: rgba(123, 104, 238, 0.2);
+            --wiki-node-line-active: rgba(0, 229, 229, 0.5);
+            --wiki-hover-bg: rgba(0, 229, 229, 0.1);
+            --wiki-active-outline: 0 0 12px rgba(0, 229, 229, 0.4);
+            --grid-pattern: radial-gradient(circle, rgba(0, 229, 229, 0.1) 1px, transparent 1px);
+            --grid-size: 50px;
+        }
+
+        /* Фоновая сетка */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                var(--grid-pattern),
+                var(--grid-pattern);
+            background-size: var(--grid-size) var(--grid-size);
+            background-position: 0 0, calc(var(--grid-size) / 2) calc(var(--grid-size) / 2);
+            background-color: var(--wiki-bg);
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.15;
+            animation: gridShift 40s linear infinite;
+        }
+
+        @keyframes gridShift {
+            0% { background-position: 0 0, calc(var(--grid-size) / 2) calc(var(--grid-size) / 2); }
+            100% { background-position: 100px 100px, calc(var(--grid-size) / 2 + 100px) calc(var(--grid-size) / 2 + 100px); }
+        }
+
+        /* Стили Wiki */
+        .wiki-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .wiki-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .wiki-nav a {
+            color: var(--wiki-accent);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius-pill);
+            transition: all 0.3s ease;
+            border: 1px solid var(--wiki-border);
+            background: rgba(0, 229, 229, 0.05);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            box-shadow: 0 0 8px rgba(0, 229, 229, 0.1);
+        }
+
+        .wiki-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 229, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .wiki-nav a:hover::before {
+            left: 100%;
+        }
+
+        .wiki-nav a:hover {
+            background: var(--wiki-hover-bg);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 229, 229, 0.3), 0 0 25px rgba(0, 229, 229, 0.2);
+            border-color: var(--wiki-accent);
+        }
+
+        .wiki-nav a:active {
+            transform: translateY(-1px);
+        }
+
+        /* Стили для дерева навигации */
+        .wiki-tree {
+            background: var(--wiki-panel-bg);
+            border-radius: var(--border-radius-large);
+            padding: 30px;
+            border: 1px solid var(--wiki-border);
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 229, 229, 0.1);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tree-node {
+            position: relative;
+            margin-bottom: 12px;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1em;
+            color: var(--wiki-text);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tree-node:hover {
+            background: var(--wiki-hover-bg);
+            box-shadow: var(--wiki-active-outline);
+        }
+
+        .tree-node.active {
+            background: rgba(0, 229, 229, 0.15);
+            box-shadow: var(--wiki-active-outline);
+            border-left: 3px solid var(--wiki-accent);
+        }
+
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15px;
+            width: 2px;
+            height: 100%;
+            background: var(--wiki-node-line);
+            z-index: -1;
+        }
+
+        .tree-node.active::before {
+            background: var(--wiki-node-line-active);
+        }
+
+        .tree-node:last-child::before {
+            height: 50%;
+        }
+
+        .tree-node-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tree-toggle {
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 229, 229, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            color: var(--wiki-accent);
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 229, 229, 0.2);
+        }
+
+        .tree-node.active .tree-toggle {
+            transform: rotate(45deg);
+            background: rgba(0, 229, 229, 0.2);
+            box-shadow: 0 0 12px rgba(0, 229, 229, 0.4);
+        }
+
+        .tree-label {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .tree-children {
+            margin-left: 40px;
+            border-left: 1px solid var(--wiki-node-line);
+            padding-left: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease-out;
+        }
+
+        .tree-children.open {
+            max-height: 2000px;
+            transition: all 0.5s ease-out;
+        }
+
+        /* Многоуровневые вложенности */
+        .tree-children .tree-children {
+            border-color: rgba(123, 104, 238, 0.2);
+        }
+
+        .tree-children .tree-node::before {
+            background: rgba(123, 104, 238, 0.2);
+        }
+
+        .tree-children .tree-node.active::before {
+            background: rgba(123, 104, 238, 0.5);
+        }
+
+        .tree-children .tree-toggle {
+            background: rgba(123, 104, 238, 0.1);
+            box-shadow: 0 0 8px rgba(123, 104, 238, 0.2);
+        }
+
+        .tree-children .tree-node.active .tree-toggle {
+            background: rgba(123, 104, 238, 0.2);
+            box-shadow: 0 0 12px rgba(123, 104, 238, 0.4);
+        }
+
+        /* Эффект волны при наведении */
+        .tree-node::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 229, 229, 0.2), transparent);
+            transition: 0.8s;
+            z-index: -1;
+        }
+
+        .tree-node:hover::after {
+            left: 100%;
+        }
+
+        /* Контент раздела */
+        .wiki-section {
+            background: var(--wiki-panel-bg);
+            border-radius: var(--border-radius-large);
+            padding: 30px;
+            border: 1px solid var(--wiki-border);
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 229, 229, 0.1);
+            backdrop-filter: blur(12px);
+            display: none;
+        }
+
+        .wiki-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .wiki-section h2 {
+            color: var(--wiki-accent);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .wiki-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(to right, var(--wiki-accent), transparent);
+            border-radius: 2px;
+        }
+
+        .wiki-section p {
+            color: var(--wiki-text-secondary);
+            line-height: 1.7;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .wiki-section ul {
+            color: var(--wiki-text-secondary);
+            margin: 20px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .wiki-section ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15px;
+            width: 2px;
+            height: 100%;
+            background: var(--wiki-node-line);
+            border-radius: 2px;
+        }
+
+        .wiki-section li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 12px;
+        }
+
+        .wiki-section li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--wiki-accent);
+            font-weight: bold;
+        }
+        .wiki-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 20px 40px 20px;
+        }
+        
+        .wiki-header {
+            text-align: center;
+            margin-bottom: 100px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .wiki-header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--neon-yellow));
+            border-radius: 2px;
+            opacity: 0.7;
+            box-shadow: 0 0 15px var(--neon-yellow);
+        }
+        
+        .wiki-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--neon-yellow) 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .wiki-header p {
+            color: var(--neon-yellow);
+            font-size: 1.1rem;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        .faq-item {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            margin-bottom: 18px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            transition: all 0.4s var(--easing);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: var(--neon-yellow);
+            box-shadow: var(--hover-shadow);
+            background: var(--card-hover);
+        }
+        
+        .faq-question {
+            padding: 25px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--light);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s var(--easing);
+            background: var(--translucent);
+            border-left: 3px solid transparent;
+        }
+        
+        .faq-item:hover .faq-question {
+            background: var(--card-hover);
+            border-left: 3px solid var(--neon-yellow);
+        }
+        
+        .faq-question h3, .faq-question h4 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .faq-icon {
+            color: var(--neon-yellow);
+            font-size: 1.3rem;
+            transition: all 0.4s var(--easing);
+            background: rgba(255, 215, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg) scale(1.1);
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+        
+        .category-content, .subcategory-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        
+        .faq-item.active .category-content, .faq-item.active .subcategory-content {
+            padding: 0 30px 30px;
+            max-height: 1000px;
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .category-content h4, .subcategory-content h4 {
+            font-size: 1.2rem;
+            margin: 25px 0 18px;
+            color: #FFA500;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .category-content h4::before, .subcategory-content h4::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #FFA500;
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 8px #FFA500;
+        }
+        
+        .category-content p, .subcategory-content p {
+            color: #FFB347;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            text-align: justify;
+            text-justify: inter-word;
+            padding: 2px 0;
+        }
+        
+        .wiki-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .wiki-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .wiki-nav a {
+            color: var(--neon-yellow);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius-pill);
+            transition: all 0.4s var(--easing);
+            border: 1px solid var(--card-border);
+            background: var(--translucent);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        .wiki-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 140, 0, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .wiki-nav a:hover::before {
+            left: 100%;
+        }
+        
+        .wiki-nav a:hover {
+            background: var(--card-hover);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--neon-shadow);
+            border-color: var(--neon-yellow);
+        }
+        
+        .wiki-content {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-large);
+            padding: 50px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wiki-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--neon-yellow), var(--primary));
+            background-size: 200% 100%;
+            animation: shine 3s linear infinite;
+            box-shadow: 0 0 15px var(--neon-yellow);
+        }
+        
+        @keyframes shine {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        
+        .wiki-content h2 {
+            color: var(--neon-yellow);
+            margin-bottom: 25px;
+            font-size: 1.9rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .wiki-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, #FF8C00, transparent);
+        }
+        
+        .wiki-content p {
+            color: var(--light-gray);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: justify;
+            text-justify: inter-word;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+        }
+        
+        .wiki-content ul {
+            color: #FFB347;
+            margin: 20px 0;
+            padding-left: 35px;
+            position: relative;
+        }
+        
+        .wiki-content ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15px;
+            width: 3px;
+            height: 100%;
+            background: rgba(255, 140, 0, 0.2);
+            border-radius: 2px;
+        }
+        
+        .wiki-content li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .wiki-content li::before {
+            content: '◆';
+            position: absolute;
+            left: 0;
+            color: var(--neon-yellow);
+            font-size: 0.8em;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Шапка -->
+    <header>
+        <div class="header-container">
+            <a href="../index.html" class="logo">
+                <div class="logo-img">
+                    <img src="../images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </a>
+            
+            <!-- Десктопное меню -->
+            <nav class="desktop-nav">
+                <a href="../index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="../start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+                <a href="index.html" class="active"><i class="fas fa-book"></i> Wiki</a>
+                <a href="../contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="../forum.html"><i class="fas fa-comments"></i> Форум</a>
+            </nav>
+            
+            <div class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="menu-header">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="../images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </div>
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="../index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="../start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+            <a href="index.html" class="active"><i class="fas fa-book"></i> Wiki</a>
+            <a href="../contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+            <a href="../forum.html"><i class="fas fa-comments"></i> Форум</a>
+        </nav>
+        
+        <div class="social-links">
+            <a href="https://vk.com/crystal_russia" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="https://t.me/crystal_russian" target="_blank"><i class="fab fa-telegram"></i></a>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="wiki-container">
+        <div class="wiki-header">
+            <h1>Описание сервера CRYSTAL RUSSIA</h1>
+        </div>
+
+        <!-- Контент секций -->
+        <div id="wikiContent" class="wiki-content">
+            <h2>Описание сервера</h2>
+            <p>CRYSTAL RUSSIA — это масштабный мобильный онлайн-проект, представляющий собой симулятор жизни в детально проработанном виртуальном мире. Здесь каждый игрок может создать уникального персонажа, построить карьеру, обзавестись жильём, развивать социальные связи и участвовать в динамичной экономике.</p>
+            <p>Проект сочетает элементы ролевой игры, стратегии и социального взаимодействия, создавая живое и непредсказуемое игровое пространство.</p>
+
+            <h2>Правила сервера</h2>
+            <ul>
+                <li>Уважительное отношение к другим игрокам</li>
+                <li>Запрещены оскорбления, унижения и токсичное поведение</li>
+                <li>Запрещена реклама других проектов</li>
+                <li>Запрещено использование сторонних программ для получения преимуществ</li>
+                <li>Администрация оставляет за собой право на принятие решений в спорных ситуациях</li>
+            </ul>
+
+            <h2>Правила ролевой игры</h2>
+            <ul>
+                <li>Действия персонажа должны быть логичными и соответствовать его характеру</li>
+                <li>Запрещена метаигра (использование знаний вне игры для выгоды в игре)</li>
+                <li>Сюжетные линии должны развиваться естественно и согласованно между участниками</li>
+                <li>Уважение к сюжетам и персонажам других игроков</li>
+            </ul>
+
+            <h2>Общие положения</h2>
+            <ul>
+                <li>Проект находится в постоянном развитии</li>
+                <li>Все правила могут быть обновлены при необходимости</li>
+                <li>Активное участие игроков в развитии сюжетов приветствуется</li>
+            </ul>
+        </div>
+
+
+    </div>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo" style="justify-content: center; margin-bottom: 20px;">
+                    <div class="logo-img">
+                        <img src="../images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                    </div>
+                    <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+                </div>
+                <p style="color: var(--gray); max-width: 500px; margin: 0 auto;">Масштабный мобильный онлайн-проект, симулятор жизни в детально проработанном мире</p>
+            </div>
+            
+            <div class="footer-links">
+                <a href="../index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="../start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+                <a href="index.html" class="active"><i class="fas fa-book"></i> Wiki</a>
+                <a href="../contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="../forum.html"><i class="fas fa-comments"></i> Форум</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2026 CRYSTAL RUSSIA. Все права защищены.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">Версия Wiki: 1.1.0</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+    <script>
+        // Добавляем анимацию для иконок
+        document.addEventListener('DOMContentLoaded', function() {
+            // Анимация иконок при наведении
+            const icons = document.querySelectorAll('.faq-icon, .wiki-nav a i, .footer-links a i');
+            icons.forEach(icon => {
+                icon.addEventListener('mouseover', function() {
+                    this.style.transform = 'scale(1.2) rotate(10deg)';
+                });
+                
+                icon.addEventListener('mouseout', function() {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                });
+            });
+
+            // Плавное появление элементов при прокрутке
+            const fadeElements = document.querySelectorAll('.wiki-header, .wiki-nav, .wiki-content, .faq-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            fadeElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Функции для раскрытия категорий
+        function toggleCategory(id) {
+            const element = document.getElementById(id);
+            const item = element.closest('.faq-item');
+            
+            if (item.classList.contains('active')) {
+                item.classList.remove('active');
+            } else {
+                // Закрываем все другие раскрытые категории
+                document.querySelectorAll('.faq-item.active').forEach(activeItem => {
+                    if (activeItem !== item) {
+                        activeItem.classList.remove('active');
+                    }
+                });
+                item.classList.add('active');
+                
+                // Воспроизводим звук при открытии (если бы был)
+                // Можно добавить аудио-эффект
+            }
+        }
+        
+        function toggleSubcategory(id) {
+            const element = document.getElementById(id);
+            const item = element.closest('.faq-item');
+            
+            if (item.classList.contains('active')) {
+                item.classList.remove('active');
+            } else {
+                // Закрываем все другие раскрытые подкатегории в этой же категории
+                const parentCategory = item.closest('.category-content');
+                if (parentCategory) {
+                    parentCategory.querySelectorAll('.faq-item.active').forEach(activeItem => {
+                        if (activeItem !== item) {
+                            activeItem.classList.remove('active');
+                        }
+                    });
+                }
+                item.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

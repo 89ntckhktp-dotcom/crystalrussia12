@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Админка Wiki | CRYSTAL RUSSIA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-header {
+            padding: 100px 20px 60px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 165, 0, 0.2));
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 40px;
+        }
+        
+        .admin-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .admin-panel {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 30px;
+        }
+        
+        .admin-title {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .admin-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn-admin {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff3e80, #ff6b8b);
+        }
+        
+        .admin-actions {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .admin-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        
+        .admin-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #8bc34a;
+        }
+        
+        .admin-message.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #ff5252;
+        }
+        
+        .job-list {
+            margin-top: 30px;
+        }
+        
+        .job-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .job-info {
+            flex: 1;
+        }
+        
+        .job-title {
+            color: white;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .job-preview {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .job-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .password-protect {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(106, 17, 203, 0.3);
+        }
+        
+        .password-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .password-input {
+            flex: 1;
+        }
+        
+        .login-btn {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Шапка -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-img">
+                    <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </a>
+            
+            <!-- Десктопное меню -->
+            <nav class="desktop-nav">
+                <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+                <a href="faq.html" class="active"><i class="fas fa-book"></i> Wiki</a>
+                <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="forum.html"><i class="fas fa-comments"></i> Форум</a>
+            </nav>
+            
+            <div class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="menu-header">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </div>
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+            <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+            <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+            <a href="forum.html"><i class="fas fa-comments"></i> Форум</a>
+        </nav>
+        
+        <div class="social-links">
+            <a href="https://vk.com/crystal_russia" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="https://t.me/crystal_ru" target="_blank"><i class="fab fa-telegram"></i></a>
+        </div>
+    </div>
+
+    <!-- Заголовок админки -->
+    <section class="admin-header">
+        <div class="hero-content">
+            <h1>Администрирование Wiki</h1>
+            <p style="color: var(--gray); max-width: 600px; margin: 0 auto;">Управление контентом раздела работ. Добавляйте, редактируйте и удаляйте статьи.</p>
+        </div>
+    </section>
+
+    <!-- Основное содержимое -->
+    <div class="admin-container">
+        <div class="password-protect" id="loginSection">
+            <h3><i class="fas fa-lock" style="color: var(--primary); margin-right: 10px;"></i> Вход в админку</h3>
+            <p style="color: var(--gray); margin-bottom: 15px;">Для доступа к администрированию введите пароль.</p>
+            <div class="password-form">
+                <input type="password" id="adminPassword" class="form-input password-input" placeholder="Введите пароль администратора">
+                <button class="btn-admin login-btn" id="loginBtn">Войти</button>
+            </div>
+        </div>
+
+        <div class="admin-panel" id="adminPanel" style="display: none;">
+            <h3 class="admin-title"><i class="fas fa-plus-circle"></i> Добавить новую работу</h3>
+            
+            <div class="form-group">
+                <label class="form-label">Категория</label>
+                <select id="jobCategory" class="form-select">
+                    <option value="starter-jobs">Начальные работы</option>
+                    <option value="transport-jobs">Транспортные работы</option>
+                    <option value="service-jobs">Работы в сфере обслуживания</option>
+                </select>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Название работы</label>
+                    <input type="text" id="jobTitle" class="form-input" placeholder="Например: Водитель такси">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Идентификатор (латиница)</label>
+                    <input type="text" id="jobId" class="form-input" placeholder="Например: taxi-driver">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Краткое описание (превью)</label>
+                <input type="text" id="jobPreview" class="form-input" placeholder="Одно предложение о работе">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Полное описание работы</label>
+                <textarea id="jobContent" class="form-textarea" placeholder="Подробное описание работы, требования, как начать, преимущества..."></textarea>
+            </div>
+            
+            <div class="admin-actions">
+                <button class="btn-admin" id="saveJobBtn">
+                    <i class="fas fa-save"></i> Сохранить работу
+                </button>
+                <button class="btn-cancel" id="cancelBtn">
+                    <i class="fas fa-times"></i> Отмена
+                </button>
+            </div>
+            
+            <div id="message" class="admin-message" style="display: none;"></div>
+        </div>
+
+        <div class="job-list" id="jobList" style="display: none;">
+            <h3 class="admin-title"><i class="fas fa-list"></i> Существующие работы</h3>
+            <p style="color: var(--gray); margin-bottom: 20px;">Нажмите на работу, чтобы отредактировать или удалить.</p>
+            <!-- Список работ будет вставлен сюда через JavaScript -->
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo" style="justify-content: center; margin-bottom: 20px;">
+                    <div class="logo-img">
+                        <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                    </div>
+                    <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+                </div>
+                <p style="color: var(--gray); max-width: 500px; margin: 0 auto;">Масштабный мобильный онлайн-проект, симулятор жизни в детально проработанном мире</p>
+            </div>
+            
+            <div class="footer-links">
+                <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+                <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a>
+                <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="forum.html"><i class="fas fa-comments"></i> Форум</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2026 CRYSTAL RUSSIA. Все права защищены.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">Администрирование Wiki</p>
+        </div>
+    </footer>
+
+    <script>
+        // Простая защита админки паролем (в реальном проекте нужно использовать серверную аутентификацию)
+        const ADMIN_PASSWORD = 'admin123'; // В реальном проекте пароль должен быть в безопасности!
+        
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('jobList').style.display = 'block';
+                loadJobs();
+            } else {
+                showMessage('Неверный пароль!', 'error');
+            }
+        });
+        
+        // Загрузка списка работ с сервера
+        function loadJobs() {
+            fetch('/api/jobs')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const jobList = document.getElementById('jobList');
+                    const categories = data.categories;
+                    
+                    // Очищаем список
+                    const existingList = jobList.querySelector('.job-items');
+                    if (existingList) {
+                        existingList.remove();
+                    }
+                    
+                    // Создаем новый список
+                    const jobItems = document.createElement('div');
+                    jobItems.className = 'job-items';
+                    
+                    categories.forEach(category => {
+                        // Добавляем заголовок категории
+                        const categoryHeader = document.createElement('div');
+                        categoryHeader.className = 'category-header';
+                        categoryHeader.style.cssText = 'margin: 20px 0 10px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-weight: 600;';
+                        categoryHeader.textContent = category.title;
+                        jobItems.appendChild(categoryHeader);
+                        
+                        // Добавляем работы категории
+                        category.items.forEach(item => {
+                            const jobItem = document.createElement('div');
+                            jobItem.className = 'job-item';
+                            jobItem.style.margin = '8px 0';
+                            jobItem.innerHTML = `
+                                <div class="job-info">
+                                    <div class="job-title">${item.title}</div>
+                                    <div class="job-preview">${item.preview}</div>
+                                </div>
+                                <div class="job-actions">
+                                    <button class="btn-admin" onclick="editJob('${category.id}', '${item.id}')">
+                                        <i class="fas fa-edit"></i> Редактировать
+                                    </button>
+                                    <button class="btn-danger" onclick="deleteJob('${category.id}', '${item.id}')">
+                                        <i class="fas fa-trash"></i> Удалить
+                                    </button>
+                                </div>
+                            `;
+                            jobItems.appendChild(jobItem);
+                        });
+                    });
+                    
+                    jobList.appendChild(jobItems);
+                    
+                    // Показываем список работ
+                    jobList.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки работ:', error);
+                    showMessage('Ошибка загрузки списка работ', 'error');
+                });
+        }
+        
+        // Показ сообщения
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `admin-message ${type}`;
+            message.style.display = 'block';
+            
+            // Скрыть сообщение через 5 секунд
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Редактирование работы
+        function editJob(categoryId, itemId) {
+            // Получаем данные работы с сервера
+            fetch('/api/jobs')
+                .then(response => response.json())
+                .then(data => {
+                    // Находим категорию и работу
+                    const category = data.categories.find(cat => cat.id === categoryId);
+                    if (category) {
+                        const job = category.items.find(job => job.id === itemId);
+                        if (job) {
+                            // Заполняем форму данными работы
+                            document.getElementById('jobTitle').value = job.title;
+                            document.getElementById('jobId').value = job.id;
+                            document.getElementById('jobPreview').value = job.preview;
+                            document.getElementById('jobCategory').value = categoryId;
+                            
+                            // Загружаем полное содержимое работы
+                            fetch('/wiki/' + job.file)
+                                .then(response => {
+                                    if (response.ok) {
+                                        return response.text();
+                                    }
+                                    throw new Error('File not found');
+                                })
+                                .then(content => {
+                                    document.getElementById('jobContent').value = content;
+                                })
+                                .catch(error => {
+                                    console.error('Ошибка загрузки содержимого работы:', error);
+                                    showMessage('Не удалось загрузить содержимое работы', 'error');
+                                    document.getElementById('jobContent').value = '';
+                                });
+                            
+                            // Прокручиваем к форме
+                            document.getElementById('saveJobBtn').scrollIntoView({behavior: 'smooth'});
+                        }
+                    }
+                })
+                .catch(error => {
+                    showMessage('Ошибка при загрузке работы', 'error');
+                    console.error('Ошибка при загрузке работ:', error);
+                });
+        }
+        
+        // Удаление работы
+        function deleteJob(categoryId, itemId) {
+            if (confirm('Вы уверены, что хотите удалить эту работу? Это действие нельзя отменить.')) {
+                // Отправляем запрос на сервер для удаления работы
+                fetch(`/api/delete-job/${categoryId}/${itemId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        showMessage('Работа успешно удалена!', 'success');
+                        // Обновляем список работ
+                        loadJobs();
+                    } else {
+                        throw new Error('Failed to delete job');
+                    }
+                })
+                .catch(error => {
+                    showMessage('Ошибка при удалении работы', 'error');
+                    console.error('Ошибка при удалении работы:', error);
+                });
+            }
+        }
+        
+        // Сохранение новой работы
+        document.getElementById('saveJobBtn').addEventListener('click', function() {
+            const jobTitle = document.getElementById('jobTitle').value;
+            const jobId = document.getElementById('jobId').value;
+            const jobPreview = document.getElementById('jobPreview').value;
+            const jobContent = document.getElementById('jobContent').value;
+            const jobCategory = document.getElementById('jobCategory').value;
+            
+            if (!jobTitle || !jobId || !jobPreview || !jobContent) {
+                showMessage('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+            
+            // Отправляем запрос на сервер для сохранения работы
+            fetch('/api/save-job', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    category: jobCategory,
+                    job: {
+                        id: jobId,
+                        title: jobTitle,
+                        preview: jobPreview,
+                        file: jobId + '.html'
+                    }
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    showMessage('Работа успешно добавлена!', 'success');
+                    // Очистка формы
+                    document.getElementById('jobTitle').value = '';
+                    document.getElementById('jobId').value = '';
+                    document.getElementById('jobPreview').value = '';
+                    document.getElementById('jobContent').value = '';
+                    // Обновляем список работ
+                    loadJobs();
+                } else {
+                    throw new Error('Failed to save job');
+                }
+            })
+            .catch(error => {
+                showMessage('Ошибка при добавлении работы', 'error');
+                console.error('Ошибка при сохранении работы:', error);
+            });
+            
+            // Очистка формы
+            document.getElementById('jobTitle').value = '';
+            document.getElementById('jobId').value = '';
+            document.getElementById('jobPreview').value = '';
+            document.getElementById('jobContent').value = '';
+        });
+        
+        // Отмена
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            document.getElementById('jobTitle').value = '';
+            document.getElementById('jobId').value = '';
+            document.getElementById('jobPreview').value = '';
+            document.getElementById('jobContent').value = '';
+        });
+        
+        // Автозаполнение ID при вводе названия
+        document.getElementById('jobTitle').addEventListener('input', function() {
+            const title = this.value;
+            const idInput = document.getElementById('jobId');
+            
+            if (!idInput.value) { // Заполняем ID только если он еще не заполнен
+                let id = title
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s]/g, '')
+                    .replace(/\s+/g, '-')
+                    .trim();
+                
+                document.getElementById('jobId').value = id;
+            }
+        });
+    </script>
+</body>
+</html>

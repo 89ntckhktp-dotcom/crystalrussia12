@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a1a">
+    <title>CRYSTAL RUSSIA | Мобильная игра</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+<!-- Только плавные падающие шарики -->
+<div class="bg-animation" id="bgAnimation"></div>
+
+<!-- Шапка -->
+<header>
+    <div class="header-container">
+        <a href="index.html" class="logo">
+            <div class="logo-img">
+                <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+            </div>
+            <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+        </a>
+
+        <!-- Десктопное меню -->
+        <nav class="desktop-nav">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> Главная</a>
+            <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+            <a href="wiki/index.html"><i class="fas fa-book"></i> Wiki</a>
+            <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+            <a href="forum.html"><i class="fas fa-comments"></i> Форум</a>
+        </nav>
+
+        <div class="menu-btn" id="menuBtn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</header>
+
+<!-- Мобильное меню -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="menu-header">
+        <div class="logo">
+            <div class="logo-img">
+                <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+            </div>
+            <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+        </div>
+        <button class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <nav class="nav-links">
+        <a href="index.html" class="active"><i class="fas fa-home"></i> Главная</a>
+        <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+        <a href="wiki/index.html"><i class="fas fa-book"></i> Wiki</a>
+        <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+        <a href="forum.html"><i class="fas fa-comments"></i> Форум</a>
+    </nav>
+
+    <div class="social-links">
+        <a href="https://vk.com/crystal_russia" target="_blank"><i class="fab fa-vk"></i></a>
+        <a href="https://t.me/crystal_russian" target="_blank"><i class="fab fa-telegram"></i></a>
+    </div>
+</div>
+
+<!-- Герой секция -->
+<section class="hero" id="hero">
+    <div class="hero-content">
+        <h1>CRYSTAL <span>RUSSIA</span></h1>
+        <p>Погрузись в атмосферу масштабной жизни в детализированном мире. Невероятные приключения, реалистичный транспорт и полная свобода действий ждут тебя прямо на твоём телефоне!</p>
+
+        <div class="cta-buttons">
+            <a href="start.html" class="btn btn-primary"><i class="fas fa-play-circle"></i> Начать играть</a>
+            <a href="#socials" class="btn btn-secondary"><i class="fas fa-users"></i> Сообщество</a>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item animate-on-scroll">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Возможностей</div>
+            </div>
+            <div class="stat-item animate-on-scroll">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Геймплея</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Особенности -->
+<section class="section" id="features">
+    <h2 class="section-title">Ключевые особенности</h2>
+    <div class="features-grid">
+        <div class="feature-card animate-on-scroll">
+            <div class="feature-icon">
+                <i class="fas fa-car"></i>
+            </div>
+            <h3>Реалистичный транспорт</h3>
+            <p>Большой парк автомобилей, мотоциклов и спецтехники с детализированной физикой управления и настройками.</p>
+        </div>
+
+        <div class="feature-card animate-on-scroll">
+            <div class="feature-icon">
+                <i class="fas fa-city"></i>
+            </div>
+            <h3>Живой открытый мир</h3>
+            <p>Проработанные локации, интерьеры, динамическая погода и смена дня и ночи для полного погружения в атмосферу.</p>
+        </div>
+
+        <div class="feature-card animate-on-scroll">
+            <div class="feature-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>Социальная жизнь</h3>
+            <p>Вступай в фракции, создавай бизнес, общайся с тысячами других игроков на одном сервере в реальном времени.</p>
+        </div>
+
+        <div class="feature-card animate-on-scroll">
+            <div class="feature-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3>Оптимизация для мобильных</h3>
+            <p>Высокая производительность даже на слабых устройствах. Удобное управление, адаптированное для сенсорных экранов.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Галерея -->
+<section class="section gallery" id="gallery">
+    <h2 class="section-title">Галерея проекта</h2>
+    <div class="gallery-slider">
+        <div class="slides" id="slides">
+            <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('images/gallery1.jpg');">
+                <div class="slide-content">
+                    <h3>Реалистичные города</h3>
+                    <p>Детализированные городские локации с полной свободой передвижения</p>
+                </div>
+            </div>
+            <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('images/gallery2.jpg');">
+                <div class="slide-content">
+                    <h3>Разнообразный транспорт</h3>
+                    <p>От обычных автомобилей до эксклюзивных суперкаров</p>
+                </div>
+            </div>
+            <div class="slide" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('images/gallery3.jpg');">
+                <div class="slide-content">
+                    <h3>Активная социальная жизнь</h3>
+                    <p>Взаимодействуй с другими игроками в реальном времени</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slider-nav">
+        <button class="slider-dot active" data-slide="0"></button>
+        <button class="slider-dot" data-slide="1"></button>
+        <button class="slider-dot" data-slide="2"></button>
+    </div>
+</section>
+
+<!-- О проекте -->
+<section class="section" id="about">
+    <h2 class="section-title">О проекте CRYSTAL RUSSIA</h2>
+    <div class="feature-card animate-on-scroll" style="max-width: 800px; margin: 0 auto;">
+        <p style="font-size: 1.1rem; margin-bottom: 25px;">CRYSTAL RUSSIA — это масштабный онлайн-проект, симулятор жизни в детально проработанном мире, вдохновленном Россией. Создавай свою уникальную историю, заводи новые знакомства, развивайся и достигай вершин в огромном открытом мире, наполненном возможностями.</p>
+
+        <p style="font-size: 1.1rem; margin-bottom: 25px;">Проект разработан специально для мобильных устройств с учетом всех особенностей управления на сенсорных экранах. Высокая оптимизация позволяет получить удовольствие от игры даже на устройствах с ограниченными ресурсами.</p>
+
+        <div style="display: flex; align-items: center; margin-top: 30px;">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 1.5rem;">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 5px;">Только на телефон</h3>
+                <p style="color: var(--gray);">Проект доступен исключительно на мобильных устройствах для максимального удобства</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Социальные сети -->
+<section class="socials-section" id="socials">
+    <h2 class="section-title">Наше сообщество</h2>
+    <p style="color: var(--gray); max-width: 600px; margin: 0 auto 20px; text-align: center;">Присоединяйтесь к нашему сообществу, чтобы быть в курсе всех новостей, обновлений и событий проекта</p>
+
+    <div class="socials-grid">
+        <a href="https://vk.com/crystal_russia" target="_blank" class="social-card vk animate-on-scroll">
+            <i class="fab fa-vk"></i>
+            <h3>ВКонтакте</h3>
+            <p>Основное сообщество</p>
+        </a>
+
+        <a href="https://t.me/crystal_russian" target="_blank" class="social-card telegram animate-on-scroll">
+            <i class="fab fa-telegram"></i>
+            <h3>Telegram</h3>
+            <p>Новости и анонсы</p>
+        </a>
+
+        <a href="#" class="social-card discord development animate-on-scroll">
+            <i class="fab fa-discord"></i>
+            <h3>Discord</h3>
+            <p>В разработке</p>
+        </a>
+
+        <a href="#" class="social-card youtube development animate-on-scroll">
+            <i class="fab fa-youtube"></i>
+            <h3>YouTube</h3>
+            <p>В разработке</p>
+        </a>
+    </div>
+</section>
+
+<!-- Футер -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-logo">
+            <div class="logo" style="justify-content: center; margin-bottom: 20px;">
+                <div class="logo-img">
+                    <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </div>
+            <p style="color: var(--gray); max-width: 500px; margin: 0 auto;">Масштабный мобильный онлайн-проект, симулятор жизни в детально проработанном мире</p>
+        </div>
+
+        <div class="footer-links">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+            <a href="wiki/index.html"><i class="fas fa-book"></i> Wiki</a>
+            <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+            <a href="forum.html"><i class="fas fa-comments"></i> Форум</a>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <p>© 2026 CRYSTAL RUSSIA. Все права защищены.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">Проект доступен только на мобильных устройствах</p>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

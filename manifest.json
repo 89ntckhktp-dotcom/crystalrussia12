@@ -1,0 +1,21 @@
+{
+  "name": "CRYSTAL RUSSIA",
+  "short_name": "CRYSTAL",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#0a0a1a",
+  "description": "Масштабный мобильный онлайн-проект, симулятор жизни в детально проработанном мире",
+  "icons": [
+    {
+      "src": "images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

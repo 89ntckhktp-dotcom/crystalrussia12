@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Форум | CRYSTAL RUSSIA</title>
+    <style>
+        /* Стили для страницы форума */
+        .forum-hero {
+            padding: 140px 20px 80px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 193, 7, 0.2));
+            border-radius: 0 0 40px 40px;
+            margin-bottom: 40px;
+        }
+        
+        .forum-hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #FFD700, #FFC107);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .forum-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .redirect-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            margin-bottom: 40px;
+        }
+        
+        .countdown {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #FFD700, #FFC107);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 20px 0;
+        }
+        
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .preview-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--card-border);
+            transition: var(--transition);
+        }
+        
+        .preview-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+        
+        .preview-card h3 {
+            color: white;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .preview-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .guide-steps {
+            margin: 40px 0;
+        }
+        
+        .guide-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .guide-step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-content h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .step-content p {
+            color: var(--gray);
+        }
+        
+        @media (max-width: 768px) {
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .guide-step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="bg-animation" id="bgAnimation" style="opacity: 1;"></div>
+
+    <!-- Шапка -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-img">
+                    <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </a>
+            
+            <!-- Десктопное меню -->
+            <nav class="desktop-nav">
+                <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+                <a href="wiki/index.html" class="active"><i class="fas fa-book"></i> Wiki</a>
+                <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="forum.html" class="active"><i class="fas fa-comments"></i> Форум</a>
+            </nav>
+            
+            <div class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="menu-header">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                </div>
+                <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+            </div>
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+            <a href="wiki/index.html" class="active"><i class="fas fa-book"></i> Wiki</a>
+            <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+            <a href="forum.html" class="active"><i class="fas fa-comments"></i> Форум</a>
+        </nav>
+        
+        <div class="social-links">
+            <a href="https://vk.com/crystal_russia" target="_blank"><i class="fab fa-vk"></i></a>
+            <a href="https://t.me/crystal_ru" target="_blank"><i class="fab fa-telegram"></i></a>
+        </div>
+    </div>
+
+    <!-- Герой секция -->
+    <section class="forum-hero">
+        <div class="hero-content">
+            <h1>Официальный форум</h1>
+            <p>Общайтесь с другими игроками, задавайте вопросы, делитесь идеями и находите единомышленников</p>
+        </div>
+    </section>
+
+    <div class="forum-container">
+        <!-- Автоматический редирект -->
+        <section class="redirect-section animate-on-scroll">
+            <h2>Перенаправление на форум...</h2>
+            <p style="color: var(--gray); margin-bottom: 20px;">Вы будете автоматически перенаправлены на официальный форум через:</p>
+            
+            <div class="countdown" id="countdown">5</div>
+            
+            <div style="margin: 30px 0;">
+                <a href="https://forum.crystal-game.ru/index.php" target="_blank" class="btn btn-primary" style="padding: 20px 40px; font-size: 1.2rem;" id="forumLink">
+                    <i class="fas fa-external-link-alt"></i> Перейти на форум сейчас
+                </a>
+            </div>
+            
+            <p style="color: var(--gray); font-size: 0.9rem;">Если перенаправление не работает, нажмите кнопку выше или скопируйте ссылку: <span style="color: white; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px; font-family: monospace;">https://forum.crystal-game.ru</span></p>
+        </section>
+        
+        <!-- Предпросмотр форума -->
+        <section class="forum-preview">
+            <h2>Что вас ждет на форуме?</h2>
+            
+            <div class="preview-grid">
+                <div class="preview-card animate-on-scroll">
+                    <h3><i class="fas fa-gamepad" style="color: var(--primary); margin-right: 10px;"></i> Игровые разделы</h3>
+                    <p>Обсуждение геймплея, стратегий, поиск команды для фракций и совместных действий.</p>
+                    <div class="preview-stats">
+                        <span><i class="fas fa-comments"></i> 250+ тем</span>
+                        <span><i class="fas fa-eye"></i> 5000+ просмотров</span>
+                    </div>
+                </div>
+                
+                <div class="preview-card animate-on-scroll">
+                    <h3><i class="fas fa-wrench" style="color: var(--primary); margin-right: 10px;"></i> Техническая поддержка</h3>
+                    <p>Помощь с установкой, решением проблем и багов, ответы на технические вопросы.</p>
+                    <div class="preview-stats">
+                        <span><i class="fas fa-comments"></i> 180+ тем</span>
+                        <span><i class="fas fa-check-circle"></i> 95% решено</span>
+                    </div>
+                </div>
+                
+                <div class="preview-card animate-on-scroll">
+                    <h3><i class="fas fa-lightbulb" style="color: var(--primary); margin-right: 10px;"></i> Предложения</h3>
+                    <p>Предложите свои идеи по улучшению игры. Самые популярные идеи реализуются разработчиками.</p>
+                    <div class="preview-stats">
+                        <span><i class="fas fa-comments"></i> 120+ предложений</span>
+                        <span><i class="fas fa-star"></i> 15 реализовано</span>
+                    </div>
+                </div>
+                
+                <div class="preview-card animate-on-scroll">
+                    <h3><i class="fas fa-users" style="color: var(--primary); margin-right: 10px;"></i> Сообщество</h3>
+                    <p>Знакомства, общение вне игры, организация мероприятий и турниров от игроков.</p>
+                    <div class="preview-stats">
+                        <span><i class="fas fa-comments"></i> 300+ тем</span>
+                        <span><i class="fas fa-user-friends"></i> 2000+ участников</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Инструкция по регистрации -->
+        <section class="forum-guide animate-on-scroll">
+            <h2>Как зарегистрироваться на форуме?</h2>
+            
+            <div class="guide-steps">
+                <div class="guide-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Перейдите на форум</h3>
+                        <p>Нажмите кнопку "Перейти на форум сейчас" выше или дождитесь автоматического перенаправления.</p>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Найдите кнопку регистрации</h3>
+                        <p>На странице форума найдите и нажмите кнопку "Регистрация" или "Зарегистрироваться".</p>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Заполните форму</h3>
+                        <p>Придумайте логин, укажите email и придумайте надежный пароль. Рекомендуем использовать тот же логин, что и в игре.</p>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Подтвердите email</h3>
+                        <p>Проверьте свою почту и подтвердите регистрацию, перейдя по ссылке в письме.</p>
+                    </div>
+                </div>
+                
+                <div class="guide-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Начните общаться</h3>
+                        <p>После подтверждения вы можете создавать темы, отвечать в существующих и общаться с другими игроками.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 40px; text-align: center;">
+                <div class="btn btn-secondary" style="margin: 0 10px;" onclick="alert('Для регистрации необходимо перейти на форум. Нажмите кнопку "Перейти на форум сейчас" выше.');">
+                    <i class="fas fa-info-circle"></i> Нужна помощь?
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo" style="justify-content: center; margin-bottom: 20px;">
+                    <div class="logo-img">
+                        <img src="images/logo.png" alt="CRYSTAL RUSSIA" onerror="this.innerHTML='CR'; this.style.color='white'; this.style.fontWeight='bold';">
+                    </div>
+                    <div class="logo-text">CRYSTAL <span>RUSSIA</span></div>
+                </div>
+                <p style="color: var(--gray); max-width: 500px; margin: 0 auto;">Масштабный мобильный онлайн-проект, симулятор жизни в детально проработанном мире</p>
+            </div>
+            
+            <div class="footer-links">
+                <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="start.html"><i class="fas fa-play-circle"></i> Начать играть</a>
+                <a href="faq.html"><i class="fas fa-book"></i> Wiki</a>
+                <a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="forum.html"><i class="fas fa-comments"></i> Форум</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2026 CRYSTAL RUSSIA. Все права защищены.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">Форум является основным местом для обсуждения проекта и получения поддержки</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
